@@ -1,1 +1,3 @@
 @import url(base.css)
+
+footer, header{height:50px;background:#555;}
