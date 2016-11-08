@@ -26,3 +26,15 @@ block content
           td {{u.avatar}}
           td {{u.gender}}
           td {{u.dob}}
+        tr(ng-hide="list.lenght > 0")
+          td.nodata(colspan="5") 无任何数据
+    ul.pagination
+      li: a(href="#") 1
+  .modal.fade
+    .modal-dialog
+      .modal-content
+        .modal-header 编辑
+        .modal-body asdf
+        .modal-footer
+          button.btn.btn-default 取消
+          button.btn.btn-info 提交

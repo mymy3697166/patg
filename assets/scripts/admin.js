@@ -10,17 +10,14 @@ $(function() {setInterval(function() {
 }, 200);});
 
 siteApp.controller("UserCtrl", ["$scope", "$http", function($scope, $http){
-  $scope.list = [{
-    id: 1,
-    name: "小明",
-    gender: "M",
-    dob: 563414400,
-    avatar: "avatar-1.jpg"
-  }, {
-    id: 2,
-    name: "张晓网",
-    gender: "M",
-    dob: 663414400,
-    avatar: "avatar-2.jpg"
-  }];
+  $scope.filter = {
+    rows: 10,
+    page: 0
+  };
+  $scope.list = [];
+  $http.get("fetch_users", $scope.filter).success(function(e){
+    if(e.status == 0) {
+      $scope.list = e.data;
+    }
+  });
 }]);
