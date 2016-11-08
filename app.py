@@ -6,6 +6,8 @@ from controllers.user import user_view
 from controllers.admin import admin_view
 
 app = Flask(__name__, static_folder = 'assets', template_folder = 'views')
+app.jinja_env.variable_start_string = '[['
+app.jinja_env.variable_end_string = ']]'
 app.jinja_env.add_extension('pyjade.ext.jinja.PyJadeExtension')
 
 # 动态路由url_prefix

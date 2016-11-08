@@ -1,5 +1,5 @@
 !!! 5
-html
+html(ng-app="siteApp")
   head
     title 管理
     link(rel="stylesheet",href="/assets/styles/bootstrap.min.css",type="text/css")
@@ -7,9 +7,17 @@ html
     link(rel="stylesheet",href="/assets/styles/admin.css",type="text/css")
     
     script(type="text/javascript",src="/assets/scripts/jquery.min.js")
+    script(type="text/javascript",src="/assets/scripts/underscore.min.js")
     script(type="text/javascript",src="/assets/scripts/bootstrap.min.js")
+    script(type="text/javascript",src="/assets/scripts/angular.min.js")
+    script(type="text/javascript",src="/assets/scripts/admin.js")
   body
     header
-    block content
+      .container
+        nav.navbar.navbar-inverse
+          ul.nav.navbar-nav
+            li.active: a(href="/admin") 用户管理
+            li: a(href="/admin/production") 平安产品
+    #bodyer.container
+      block content
     footer
-

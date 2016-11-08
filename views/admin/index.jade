@@ -1,4 +1,28 @@
 extends 'admin/base'
 
 block content
-  div 阿斯蒂芬
+  br
+  ol.breadcrumb
+    li: a(href="/admin") 用户
+    li.active 用户信息管理
+  .content-wrap(ng-controller="UserCtrl")
+    .row
+      .col-xs-6
+        button.btn.btn-default 新建+
+      .col-xs-6
+    br
+    table.table.table-striped
+      thead
+        tr
+          th 用户ID
+          th 用户名称
+          th 照片
+          th 性别
+          th 出生日期
+      tbody
+        tr(ng-repeat="u in list")
+          td {{u.id}}
+          td {{u.name}}
+          td {{u.avatar}}
+          td {{u.gender}}
+          td {{u.dob}}
