@@ -7,4 +7,6 @@ body{background:#eee;}
 .content-wrap{margin-bottom:20px;padding:15px;background:#fff;}
 .pagination{margin:0px;}
 
+td{vertical-align:middle!important;}
+
 #avatar{width:80px;height:80px;}

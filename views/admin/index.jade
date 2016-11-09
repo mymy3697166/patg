@@ -14,20 +14,25 @@ block content
     table.table.table-striped
       thead
         tr
-          th 用户ID
           th 用户名称
+          th 手机号
           th 照片
           th 性别
           th 出生日期
+          th 编辑
       tbody
         tr(ng-repeat="u in list")
-          td {{u.id}}
           td {{u.name}}
+          td {{u.phone}}
           td: img(style="width:32px;height:32px;", ng-src="{{u.avatar}}")
           td {{u.gender}}
           td {{u.dob}}
+          td
+            button.btn.btn-default.btn-xs(ng-click="update_edit($index)")
+              span.glyphicon.glyphicon-edit
+              | &nbsp;编辑
         tr(ng-show="list.lenght == 0")
-          td.nodata(colspan="5") 无任何数据
+          td.nodata(colspan="6") 无任何数据
     ul#member-pager.pagination
     #editor.modal.fade(data-backdrop="static")
       .modal-dialog

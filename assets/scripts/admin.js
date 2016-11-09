@@ -30,18 +30,9 @@ function upload_file(opts) {
 }
 
 siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
-  $scope.filter = {
-    rows: 10,
-    page: 0
-  };
+  $scope.filter = {rows: 2, page: 0};
   $scope.list = [];
-  $("#datetimepicker").datetimepicker({
-    format: "yyyy-mm-dd",
-    startView: 4,
-    minView: 2,
-    autoclose: true,
-    language: "zh-CN"
-  });
+  $("#datetimepicker").datetimepicker({format: "yyyy-mm-dd", startView: 4, minView: 2, autoclose: true, language: "zh-CN"});
   $scope.gender_str = function(val){
     return val == "M" ? "男" : "女";
   };
@@ -51,18 +42,11 @@ siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
     return url;
   };
   $scope.create_edit = function() {
-    $scope.member = {
-      id: "",
-      phone: "",
-      email: "",
-      name: "",
-      gender: "M",
-      dob: "1985-01-01",
-      avatar: "",
-      signature: "",
-      description: "",
-      status: 0
-    };
+    $scope.member = {id: "", phone: "", email: "", name: "", gender: "M", dob: "1985-01-01", avatar: "", signature: "", description: "", status: 0};
+    $("#editor").modal("show");
+  };
+  $scope.update_edit = function(index) {
+    $scope.member = _.clone($scope.list[index]);
     $("#editor").modal("show");
   };
   $scope.submit = function(evt) {
@@ -70,6 +54,7 @@ siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
     $http.post("update_member", $scope.member).success(function(e) {
       $(evt.target).button("reset");
       $("#editor").modal("hide");
+      fetch($scope.filter.page);
     });
   };
   $scope.select_avatar = function() {
@@ -81,25 +66,14 @@ siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
       }
     });
   };
-  function fetch(page) {
-    $scope.page = page;
-    $http.get("fetch_members", $scope.filter).success(function(e){
-      if(e.status == 0) {
-        $scope.list = e.data;
-        $("#member-pager").twbsPagination({
-          totalPages: e.count,
-          startPage: page + 1,
-          visiblePages: 10,
-          first: "首页",
-          prev: "上一页",
-          next: "下一页",
-          last: "未页",
-          onPageClick: function(event, index) {
-            fetch(index - 1);
-          }
-        });
+  $http.post("fetch_members", $scope.filter).success(function(e){
+    $scope.list = e.data;
+    $("#member-pager").pagination({
+      pages: e.pages, index: 0, showPages: 10,
+      onPageClick: function(index) {
+        $scope.filter.page = index - 1;
+        $http.post("fetch_members", $scope.filter).success(function(e){$scope.list = e.data;});
       }
     });
-  }
-  fetch(0);
+  });
 }]);
