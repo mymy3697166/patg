@@ -1,6 +1,7 @@
 # coding: utf-8
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, request
+import leancloud, time
+from StringIO import StringIO
 
 from controllers.member import member_view
 from controllers.admin import admin_view
@@ -18,3 +19,13 @@ app.register_blueprint(member_view, url_prefix = '/user')
 @app.route('/')
 def index():
   return render_template('index.jade')
+
+@app.route('/upload_file', methods = ['POST'])
+def upload_file():
+  fn = str(int(time.time() * 1000)) + ".jpg"
+  io = StringIO()
+  io.write(request.files['nfile'].read())
+  file = leancloud.File(fn, io)
+  file.save()
+  io.close()
+  return '{"status": 0, "url": "%s"}'%file.url

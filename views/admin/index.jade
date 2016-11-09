@@ -5,10 +5,10 @@ block content
   ol.breadcrumb
     li: a(href="/admin") 用户
     li.active 用户信息管理
-  .content-wrap(ng-controller="UserCtrl")
+  .content-wrap(ng-controller="MemberCtrl")
     .row
       .col-xs-6
-        button.btn.btn-default 新建+
+        button.btn.btn-default(ng-click="create_edit()") 新建+
       .col-xs-6
     br
     table.table.table-striped
@@ -23,18 +23,57 @@ block content
         tr(ng-repeat="u in list")
           td {{u.id}}
           td {{u.name}}
-          td {{u.avatar}}
+          td: img(style="width:32px;height:32px;", ng-src="{{u.avatar}}")
           td {{u.gender}}
           td {{u.dob}}
-        tr(ng-hide="list.lenght > 0")
+        tr(ng-show="list.lenght == 0")
           td.nodata(colspan="5") 无任何数据
-    ul.pagination
-      li: a(href="#") 1
-  .modal.fade
-    .modal-dialog
-      .modal-content
-        .modal-header 编辑
-        .modal-body asdf
-        .modal-footer
-          button.btn.btn-default 取消
-          button.btn.btn-info 提交
+    ul#member-pager.pagination
+    #editor.modal.fade(data-backdrop="static")
+      .modal-dialog
+        .modal-content
+          .modal-header 编辑
+          .modal-body.form-horizontal
+            .form-group
+              label.col-xs-2.control-label 姓名
+              .col-xs-9
+                input.form-control(type="text", ng-model="member.name")
+            .form-group
+              label.col-xs-2.control-label 性别
+              .col-xs-9
+                .input-group
+                  button.btn.btn-default.dropdown-toggle(data-toggle="dropdown")
+                    span {{gender_str(member.gender)}}
+                    |&nbsp;
+                    span.caret
+                  ul.dropdown-menu(role="menu")
+                    li: a(href="javascript:void(0)", ng-click="member.gender = 'M'") 男
+                    li: a(href="javascript:void(0)", ng-click="member.gender = 'F'") 女
+            .form-group
+              label.col-xs-2.control-label 年龄
+              .col-xs-9
+                input#datetimepicker.form-control(type="text", ng-model="member.dob", readonly)
+            .form-group
+              label.col-xs-2.control-label 手机号
+              .col-xs-9
+                input.form-control(type="text", ng-model="member.phone")
+            .form-group
+              label.col-xs-2.control-label 邮箱
+              .col-xs-9
+                input.form-control(type="text", ng-model="member.email")
+            .form-group
+              label.col-xs-2.control-label 照片
+              .col-xs-9
+                input(type="hidden", ng-model="member.avatar")
+                a(href="javascript:void(0)", ng-click="select_avatar()"): img#avatar(ng-src="{{avatar_str(member.avatar)}}")
+            .form-group
+              label.col-xs-2.control-label 签名
+              .col-xs-9
+                textarea.form-control(ng-model="member.signature")
+            .form-group
+              label.col-xs-2.control-label 描述
+              .col-xs-9
+                textarea.form-control(ng-model="member.description", rows=5)
+          .modal-footer
+            button.btn.btn-default(data-dismiss="modal") 取消
+            button.btn.btn-info(ng-click="submit($event)", data-loading-text="处理中...") 提交

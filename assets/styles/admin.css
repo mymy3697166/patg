@@ -6,3 +6,5 @@ header .navbar-inverse, header .navbar-collapse{background:#555;border-color:#55
 body{background:#eee;}
 .content-wrap{margin-bottom:20px;padding:15px;background:#fff;}
 .pagination{margin:0px;}
+
+#avatar{width:80px;height:80px;}
