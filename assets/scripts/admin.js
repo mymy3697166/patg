@@ -10,27 +10,25 @@ $(function() {setInterval(function() {
 }, 200);});
 
 function upload_file(opts) {
-  o = opts.ofile||"";
   $("#file_iframe").remove();
   var iframe = $("<iframe id='file_iframe' style='display:none;'></iframe>");
   $("body").append(iframe);
   var body = $(iframe[0].contentWindow.document.body);
   var form = $("<form action='/upload_file' method='post' enctype='multipart/form-data'></form>");
-  var ofile = $("<input type='hidden' name='ofile' value='" + o + "'>");
-  var nfile = $("<input type='file' name='nfile'/>");
-  body.append(form.append(ofile).append(nfile));
+  var file = $("<input type='file' name='file'/>");
+  body.append(form.append(file));
   iframe[0].onload = function() {
     var result = $(iframe[0].contentWindow.document.body).html();
     if(opts.onComplete) opts.onComplete($.parseJSON(result));
   };
-  nfile.click();
-  nfile.change(function() {
+  file.click();
+  file.change(function() {
     form.submit();
   });
 }
 
 siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
-  $scope.filter = {rows: 2, page: 0};
+  $scope.filter = {rows: 10, page: 0};
   $scope.list = [];
   $("#datetimepicker").datetimepicker({format: "yyyy-mm-dd", startView: 4, minView: 2, autoclose: true, language: "zh-CN"});
   $scope.gender_str = function(val){
@@ -42,12 +40,18 @@ siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
     return url;
   };
   $scope.create_edit = function() {
-    $scope.member = {id: "", phone: "", email: "", name: "", gender: "M", dob: "1985-01-01", avatar: "", signature: "", description: "", status: 0};
+    $scope.member = {id: "", phone: "", email: "", name: "", gender: "M", dob: "1985-01-01", avatar: "", avatar_id: "", signature: "", description: "", status: 0};
     $("#editor").modal("show");
   };
   $scope.update_edit = function(index) {
     $scope.member = _.clone($scope.list[index]);
     $("#editor").modal("show");
+  };
+  $scope.update_status = function(m) {
+    var status = m.status == 0 ? 1 : 0;
+    $http.post("update_member", {id: m.id, status: status}).success(function(e) {
+      if(e.status == 0) m.status = status;
+    });
   };
   $scope.submit = function(evt) {
     $(evt.target).button("loading");
@@ -61,19 +65,19 @@ siteApp.controller("MemberCtrl", ["$scope", "$http", function($scope, $http){
     upload_file({
       ofile: $scope.member.avatar,
       onComplete: function(e) {
-        if(e.status == 0) $scope.$apply(function(){ $scope.member.avatar = e.url; });
-        console.log($scope.member);
+        if(e.status == 0) $scope.$apply(function(){
+          $scope.member.avatar = e.url;
+          $scope.member.avatar_id = e.id;
+        });
       }
     });
   };
-  $http.post("fetch_members", $scope.filter).success(function(e){
-    $scope.list = e.data;
-    $("#member-pager").pagination({
-      pages: e.pages, index: 0, showPages: 10,
-      onPageClick: function(index) {
-        $scope.filter.page = index - 1;
-        $http.post("fetch_members", $scope.filter).success(function(e){$scope.list = e.data;});
-      }
+  function fetch(page) {
+    $scope.filter.page = page;
+    $http.post("fetch_members", $scope.filter).success(function(e){
+      $scope.list = e.data;
+      $("#member-pager").pagination({pages: e.pages, index: $scope.filter.page, showPages: 10, onPageClick: fetch});
     });
-  });
+  }
+  fetch(0);
 }]);

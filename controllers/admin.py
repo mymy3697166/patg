@@ -25,16 +25,5 @@ def fetch_members():
 
 @admin_view.route('/update_member', methods = ['POST'])
 def update_member():
-  Member.update_member(
-    id = request.json['id'],
-    phone = request.json['phone'],
-    email = request.json['email'],
-    name = request.json['name'],
-    gender = request.json['gender'],
-    dob = request.json['dob'],
-    avatar = request.json['avatar'],
-    signature = request.json['signature'],
-    description = request.json['description'],
-    status = request.json['status']
-  )
+  Member.update_member(request.json)
   return jsonify({'status': 0})

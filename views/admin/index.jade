@@ -19,7 +19,7 @@ block content
           th 照片
           th 性别
           th 出生日期
-          th 编辑
+          th(width="140") 编辑
       tbody
         tr(ng-repeat="u in list")
           td {{u.name}}
@@ -30,10 +30,16 @@ block content
           td
             button.btn.btn-default.btn-xs(ng-click="update_edit($index)")
               span.glyphicon.glyphicon-edit
-              | &nbsp;编辑
+              | &nbsp;修改
+            button.btn.btn-danger.btn-xs(ng-click="update_status(u)" ng-show="u.status == '0'")
+              span.glyphicon.glyphicon-ban-circle
+              | &nbsp;冻结
+            button.btn.btn-success.btn-xs(ng-click="update_status(u)" ng-show="u.status == '1'")
+              span.glyphicon.glyphicon-ban-circle
+              | &nbsp;解冻
         tr(ng-show="list.lenght == 0")
           td.nodata(colspan="6") 无任何数据
-    ul#member-pager.pagination
+    ul#member-pager.pagination.pagination-sm
     #editor.modal.fade(data-backdrop="static")
       .modal-dialog
         .modal-content

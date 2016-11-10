@@ -24,8 +24,8 @@ def index():
 def upload_file():
   fn = str(int(time.time() * 1000)) + ".jpg"
   io = StringIO()
-  io.write(request.files['nfile'].read())
+  io.write(request.files['file'].read())
   file = leancloud.File(fn, io)
   file.save()
   io.close()
-  return '{"status": 0, "url": "%s"}'%file.url
+  return '{"status": 0, "url": "%s", "id": "%s"}'%(file.url, file.id)
